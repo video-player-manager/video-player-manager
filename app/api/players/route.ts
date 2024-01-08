@@ -3,14 +3,17 @@ import { playersRepo } from "@/lib/server"
 import { apiHandler } from "@/lib/server/api"
 
 const handlers = apiHandler({
-  GET: getAll,
+  GET: getPaginated,
   POST: create,
 })
 
 export const { GET, POST } = handlers
 
-async function getAll() {
-  return await playersRepo.getAll()
+async function getPaginated(req: Request) {
+  const { searchParams } = new URL(req.url)
+  const offset = Number(searchParams.get("offset"))
+
+  return await playersRepo.getPaginated(offset)
 }
 
 async function create(req: Request) {
